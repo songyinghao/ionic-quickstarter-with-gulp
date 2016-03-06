@@ -30,6 +30,23 @@ gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
 });
 
+//
+// === CHILD TASKS ===
+//
+
+// copy all files under the SRC to the WWW directory
+gulp.task('copy-src-to-dest', function() {
+  gulp.src(['./src/**/*','./src/index.html'])
+    .pipe(gulp.dest('./www'));
+});
+
+// watch SRC folder
+gulp.task('watch-src-folder', function() {
+  gulp.src(['./src/*','./src/**/*'], {base: './src'})
+    .pipe(watch('./src', {base: './src'}))
+    .pipe(gulp.dest('./www'));
+});
+
 gulp.task('install', ['git-check'], function() {
   return bower.commands.install()
     .on('log', function(data) {
