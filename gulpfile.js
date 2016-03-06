@@ -6,9 +6,14 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var del = require('del');
 
+//
+// === PATHS ===
+//
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['./scss/**/*.scss'],
+  dist: ['./www']
 };
 
 gulp.task('default', ['sass']);
@@ -33,6 +38,13 @@ gulp.task('watch', function() {
 //
 // === CHILD TASKS ===
 //
+
+// clean task
+gulp.task('clean', function (cb) {
+  return del([
+    paths.dist + '/**/*'
+  ], cb);
+});
 
 // copy all files under the SRC to the WWW directory
 gulp.task('copy-src-to-dest', function() {
