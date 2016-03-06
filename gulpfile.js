@@ -7,6 +7,8 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var del = require('del');
+var gulpCopy = require('gulp-copy');
+var watch = require('gulp-watch');
 
 //
 // === PATHS ===
