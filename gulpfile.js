@@ -14,17 +14,17 @@ var watch = require('gulp-watch');
 // === PATHS ===
 //
 var paths = {
-  sass: ['./scss/**/*.scss'],
+  sass: ['./src/css/scss/*.scss'],
   dist: ['./www']
 };
 
 gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
+  gulp.src('./src/css/scss/ionic.app.scss')
     .pipe(sass())
     .on('error', sass.logError)
-    .pipe(gulp.dest('./www/css/'))
+    .pipe(gulp.dest('./src/css/'))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
