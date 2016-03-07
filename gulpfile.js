@@ -9,6 +9,14 @@ var sh = require('shelljs');
 var del = require('del');
 var gulpCopy = require('gulp-copy');
 var watch = require('gulp-watch');
+/**
+ * Linting Sass stylesheets with Stylelint
+ * http://www.creativenightly.com/2016/02/How-to-lint-your-css-with-stylelint/
+ */
+var postcss     = require('gulp-postcss');
+var reporter    = require('postcss-reporter');
+var syntax_scss = require('postcss-scss');
+var stylelint   = require('stylelint');
 
 //
 // === PATHS ===
@@ -59,6 +67,34 @@ gulp.task('watch-src-folder', function() {
   gulp.src(['./src/*','./src/**/*'], {base: './src'})
     .pipe(watch('./src', {base: './src'}))
     .pipe(gulp.dest('./www'));
+});
+
+// scss lint
+gulp.task("scss-lint", function() {
+
+  // stylelint config rules
+  var stylelintConfig = {
+    "extends": "stylelint-config-standard",
+    "rules": {
+      "indentation": [ 2, {
+        "warn": true,
+        "except": ["param"],
+        "message": "Please use 2 spaces for indentation. Tabs make The Architect grumpy."
+      } ],
+      "number-leading-zero": null,
+    }
+  }
+
+  var processors = [
+    stylelint(stylelintConfig),
+    reporter({
+      clearMessages: true,
+      throwError: true,
+    })
+  ];
+
+  return gulp.src(['./src/css/scss/*.scss'])
+    .pipe(postcss(processors), {syntax: syntax_scss});
 });
 
 gulp.task('install', ['git-check'], function() {
