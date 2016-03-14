@@ -22,11 +22,15 @@ var ngConstant = require('gulp-ng-constant');
 var extend = require('gulp-extend');
 var args    = require('yargs').argv;
 
+var templateCache = require('gulp-angular-templatecache');
+var minifyHtml = require('gulp-minify-html');
+
 //
 // === PATHS ===
 //
 var paths = {
   sass: ['./src/css/scss/*.scss'],
+  templates: ['./src/app/**/*.html'],
   dist: ['./www']
 };
 
@@ -119,6 +123,18 @@ var config = function(env) {
 gulp.task('set-api-config', function() {
   config(args.env || "development")
 })
+
+// templatesCache task
+gulp.task('templates', function() {
+  gulp.src(paths.templates)
+    .pipe(minifyHtml({empty: true}))
+    .pipe(templateCache({
+      standalone: true,
+      root: 'app'
+    }))
+    .pipe(gulp.dest(paths.dist + '/js'));
+});
+
 
 gulp.task('install', ['git-check'], function() {
   return bower.commands.install()
