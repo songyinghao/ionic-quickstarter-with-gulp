@@ -10,7 +10,9 @@ angular.module('starter', [
     'starter.controllers',
     'starter.services',
     'starter.routes',
-    'starter.configs'
+    'starter.configs',
+
+    'ionic.contrib.ui.tinderCards'
     ])
 
 .run(function($ionicPlatform) {

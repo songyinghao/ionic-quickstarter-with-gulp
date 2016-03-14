@@ -30,6 +30,8 @@ var imagemin = require('gulp-imagemin');
 var uglify = require("gulp-uglify");
 var ngAnnotate = require('gulp-ng-annotate');
 
+var inject = require('gulp-inject');
+
 //
 // === PATHS ===
 //
@@ -39,7 +41,12 @@ var paths = {
   images: ['./src/app/**/img/*'],
   commonimages: ['./src/img/*'],
   scripts: ['./src/app/*.js','./src/app/**/*.module.js','./src/app/**/*.js'],
-  dist: ['./www']
+  dist: ['./www'],
+
+  lib: [
+    './src/lib/collide/collide.js',
+    './src/lib/ionic-contrib-tinder-cards/ionic.tdcards.js',
+  ]
 };
 
 gulp.task('default', ['sass']);
@@ -83,6 +90,13 @@ gulp.task('watch-src-folder', function() {
   gulp.src(['./src/*','./src/**/*'], {base: './src'})
     .pipe(watch('./src', {base: './src'}))
     .pipe(gulp.dest('./www'));
+});
+
+// Automatic injection third library script in the index file
+gulp.task('inject-libs-to-index-html', function() {
+  gulp.src('./src/index.html')
+      .pipe(inject(gulp.src(paths.lib,{read: false}),{relative: true}))
+      .pipe(gulp.dest('./src'));
 });
 
 // scss lint
@@ -154,6 +168,14 @@ gulp.task('common-imagemin', function() {
   gulp.src(paths.commonimages)
     .pipe(imagemin())
     .pipe(gulp.dest(paths.dist + '/img'));
+});
+
+// minify third library script
+gulp.task('minify-third-library-js', function() {
+  gulp.src(paths.lib)
+    .pipe(uglify())
+    .pipe(concat('app.plugin.min.js'))
+    .pipe(gulp.dest(paths.dist + '/js'));
 });
 
 gulp.task('install', ['git-check'], function() {
