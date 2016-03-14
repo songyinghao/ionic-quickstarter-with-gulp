@@ -9,7 +9,8 @@ angular.module('starter', [
     'ionic',
     'starter.controllers',
     'starter.services',
-    'starter.routes'
+    'starter.routes',
+    'starter.configs'
     ])
 
 .run(function($ionicPlatform) {

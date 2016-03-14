@@ -18,6 +18,10 @@ var reporter    = require('postcss-reporter');
 var syntax_scss = require('postcss-scss');
 var stylelint   = require('stylelint');
 
+var ngConstant = require('gulp-ng-constant');
+var extend = require('gulp-extend');
+var args    = require('yargs').argv;
+
 //
 // === PATHS ===
 //
@@ -96,6 +100,25 @@ gulp.task("scss-lint", function() {
   return gulp.src(['./src/css/scss/*.scss'])
     .pipe(postcss(processors), {syntax: syntax_scss});
 });
+
+// api config
+var config = function(env) {
+  gulp.src(['./src/app/config/config.default.json', 'src/app/config/config.' + env + '.json'])
+    .pipe(extend('config.json', true))
+    .pipe(ngConstant({
+      name: 'starter.configs',
+      deps: [],
+    }))
+    .pipe(rename(function(path) {
+      path.basename = 'config';
+      path.extname = '.js';
+    }))
+    .pipe(gulp.dest('src/app/config'));
+};
+
+gulp.task('set-api-config', function() {
+  config(args.env || "development")
+})
 
 gulp.task('install', ['git-check'], function() {
   return bower.commands.install()
