@@ -51,6 +51,8 @@ var paths = {
 
 gulp.task('default', ['sass']);
 
+// sass task
+// =================================================================
 gulp.task('sass', function(done) {
   gulp.src('./src/css/scss/ionic.app.scss')
     .pipe(sass())
@@ -73,6 +75,7 @@ gulp.task('watch', function() {
 //
 
 // clean task
+// =================================================================
 gulp.task('clean', function (cb) {
   return del([
     paths.dist + '/**/*'
@@ -80,19 +83,22 @@ gulp.task('clean', function (cb) {
 });
 
 // copy all files under the SRC to the WWW directory
+// =================================================================
 gulp.task('copy-src-to-dest', function() {
   gulp.src(['./src/**/*','./src/index.html'])
     .pipe(gulp.dest('./www'));
 });
 
 // watch SRC folder
+// =================================================================
 gulp.task('watch-src-folder', function() {
   gulp.src(['./src/*','./src/**/*'], {base: './src'})
     .pipe(watch('./src', {base: './src'}))
     .pipe(gulp.dest('./www'));
 });
 
-// Automatic injection third library script in the index file
+// automatic injection third library script in the index file
+// =================================================================
 gulp.task('inject-libs-to-index-html', function() {
   gulp.src('./src/index.html')
       .pipe(inject(gulp.src(paths.lib,{read: false}),{relative: true}))
@@ -100,6 +106,7 @@ gulp.task('inject-libs-to-index-html', function() {
 });
 
 // scss lint
+// =================================================================
 gulp.task("scss-lint", function() {
 
   // stylelint config rules
@@ -128,6 +135,7 @@ gulp.task("scss-lint", function() {
 });
 
 // api config
+// =================================================================
 var config = function(env) {
   gulp.src(['./src/app/config/config.default.json', 'src/app/config/config.' + env + '.json'])
     .pipe(extend('config.json', true))
@@ -147,6 +155,7 @@ gulp.task('set-api-config', function() {
 })
 
 // templatesCache task
+// =================================================================
 gulp.task('templates', function() {
   gulp.src(paths.templates)
     .pipe(minifyHtml({empty: true}))
@@ -157,7 +166,9 @@ gulp.task('templates', function() {
     .pipe(gulp.dest(paths.dist + '/js'));
 });
 
+
 // imagemin images and output them in dist
+// =================================================================
 gulp.task('imagemin', function() {
   gulp.src(paths.images)
     .pipe(imagemin())
@@ -171,6 +182,7 @@ gulp.task('common-imagemin', function() {
 });
 
 // minify third library script
+// =================================================================
 gulp.task('minify-third-library-js', function() {
   gulp.src(paths.lib)
     .pipe(uglify())
@@ -186,6 +198,7 @@ gulp.task('install', ['git-check'], function() {
 });
 
 // scripts task
+// =================================================================
 gulp.task('scripts', function() {
   gulp.src(paths.scripts)
     .pipe(ngAnnotate({
@@ -197,6 +210,10 @@ gulp.task('scripts', function() {
     .pipe(concat('app.bundle.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
 });
+
+//
+// === OTHER TASKS (used by Ionic CLI default) ===
+//
 
 gulp.task('git-check', function(done) {
   if (!sh.which('git')) {
