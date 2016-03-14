@@ -170,6 +170,14 @@ gulp.task('common-imagemin', function() {
     .pipe(gulp.dest(paths.dist + '/img'));
 });
 
+// minify third library script
+gulp.task('minify-third-library-js', function() {
+  gulp.src(paths.lib)
+    .pipe(uglify())
+    .pipe(concat('app.plugin.min.js'))
+    .pipe(gulp.dest(paths.dist + '/js'));
+});
+
 gulp.task('install', ['git-check'], function() {
   return bower.commands.install()
     .on('log', function(data) {
