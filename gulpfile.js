@@ -32,9 +32,23 @@ var ngAnnotate = require('gulp-ng-annotate');
 
 var inject = require('gulp-inject');
 
+/**
+* This is intended to be a temporary solution until the release of gulp 4.0 which has support
+* for defining task dependencies in series or in parallel.
+*/
+var runSequence = require('run-sequence');
+
 //
 // === PATHS ===
 //
+
+var files = {
+  jsbundle: 'app.bundle.min.js',
+  appcss: 'app.css',
+  ionicappmincss: 'ionic.app.min.css',
+  ionicbundle: 'ionic.bundle.min.js'    // change to 'ionic.bundle.js' for debugging moduleErr errors
+};
+
 var paths = {
   sass: ['./src/css/scss/*.scss'],
   templates: ['./src/app/**/*.html'],
@@ -49,8 +63,43 @@ var paths = {
   ]
 };
 
-gulp.task('default', ['sass']);
+//
+// === TOP LEVEL TASKS (invoke with "gulp <task-name>") ===
+//
 
+// default task for DEV
+gulp.task('default', ['inject-libs-to-index-html']);
+
+// build task for Development mode、 Staging mode or Production mode
+var developmentTask,
+    stagingTask,
+    productionTask;
+
+// development task
+developmentTask = ['sass', 'set-api-config', 'copy-src-to-dest', 'watch-src-folder'];
+
+// production task
+productionTask = ['sass', 'index', 'templates', 'set-api-config', 'imagemin', 'common-imagemin', 'scripts', 'minify-third-library-js'];
+
+// staging task
+stagingTask = productionTask;
+
+gulp.task('build', function(callback){
+  runSequence('clean',
+    eval((args.env || "development") + "Task"),
+    function(){
+      if(!args.env || (args.env == "development")) {
+        gutil.log(gutil.colors.yellow('Watching and auto synchronizing the change from src to www, Ctrl-C to stop watching and quit'));
+      }
+    });
+})
+
+//
+// === CHILD TASKS ===
+//
+
+// sass task
+// =================================================================
 gulp.task('sass', function(done) {
   gulp.src('./src/css/scss/ionic.app.scss')
     .pipe(sass())
@@ -73,6 +122,7 @@ gulp.task('watch', function() {
 //
 
 // clean task
+// =================================================================
 gulp.task('clean', function (cb) {
   return del([
     paths.dist + '/**/*'
@@ -80,19 +130,22 @@ gulp.task('clean', function (cb) {
 });
 
 // copy all files under the SRC to the WWW directory
+// =================================================================
 gulp.task('copy-src-to-dest', function() {
   gulp.src(['./src/**/*','./src/index.html'])
     .pipe(gulp.dest('./www'));
 });
 
 // watch SRC folder
+// =================================================================
 gulp.task('watch-src-folder', function() {
   gulp.src(['./src/*','./src/**/*'], {base: './src'})
     .pipe(watch('./src', {base: './src'}))
     .pipe(gulp.dest('./www'));
 });
 
-// Automatic injection third library script in the index file
+// automatic injection third library script in the index file
+// =================================================================
 gulp.task('inject-libs-to-index-html', function() {
   gulp.src('./src/index.html')
       .pipe(inject(gulp.src(paths.lib,{read: false}),{relative: true}))
@@ -100,6 +153,7 @@ gulp.task('inject-libs-to-index-html', function() {
 });
 
 // scss lint
+// =================================================================
 gulp.task("scss-lint", function() {
 
   // stylelint config rules
@@ -128,6 +182,7 @@ gulp.task("scss-lint", function() {
 });
 
 // api config
+// =================================================================
 var config = function(env) {
   gulp.src(['./src/app/config/config.default.json', 'src/app/config/config.' + env + '.json'])
     .pipe(extend('config.json', true))
@@ -147,6 +202,7 @@ gulp.task('set-api-config', function() {
 })
 
 // templatesCache task
+// =================================================================
 gulp.task('templates', function() {
   gulp.src(paths.templates)
     .pipe(minifyHtml({empty: true}))
@@ -157,7 +213,9 @@ gulp.task('templates', function() {
     .pipe(gulp.dest(paths.dist + '/js'));
 });
 
+
 // imagemin images and output them in dist
+// =================================================================
 gulp.task('imagemin', function() {
   gulp.src(paths.images)
     .pipe(imagemin())
@@ -171,11 +229,28 @@ gulp.task('common-imagemin', function() {
 });
 
 // minify third library script
+// =================================================================
 gulp.task('minify-third-library-js', function() {
   gulp.src(paths.lib)
     .pipe(uglify())
     .pipe(concat('app.plugin.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
+});
+
+// prepare Index.html for dist - ie. using min files
+// =================================================================
+gulp.task('index', function() {
+  gulp.src(paths.html)
+    .pipe(htmlreplace({
+      'sass': 'css/ionic.app.min.css',
+      'css': 'css/app.min.css',
+      'js': 'js/app.bundle.min.js',
+      'third-library-js': 'js/app.plugin.min.js',
+      'templates': 'js/templates.js',
+      'shared': 'shared/services/app.services.min.js',
+      'ionic': 'lib/ionic/js/' + files.ionicbundle
+    }))
+    .pipe(gulp.dest(paths.dist + '/.'));
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -186,6 +261,7 @@ gulp.task('install', ['git-check'], function() {
 });
 
 // scripts task
+// =================================================================
 gulp.task('scripts', function() {
   gulp.src(paths.scripts)
     .pipe(ngAnnotate({
@@ -197,6 +273,10 @@ gulp.task('scripts', function() {
     .pipe(concat('app.bundle.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
 });
+
+//
+// === OTHER TASKS (used by Ionic CLI default) ===
+//
 
 gulp.task('git-check', function(done) {
   if (!sh.which('git')) {
