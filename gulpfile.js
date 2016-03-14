@@ -27,6 +27,9 @@ var minifyHtml = require('gulp-minify-html');
 
 var imagemin = require('gulp-imagemin');
 
+var uglify = require("gulp-uglify");
+var ngAnnotate = require('gulp-ng-annotate');
+
 //
 // === PATHS ===
 //
@@ -35,6 +38,7 @@ var paths = {
   templates: ['./src/app/**/*.html'],
   images: ['./src/app/**/img/*'],
   commonimages: ['./src/img/*'],
+  scripts: ['./src/app/*.js','./src/app/**/*.module.js','./src/app/**/*.js'],
   dist: ['./www']
 };
 
@@ -157,6 +161,19 @@ gulp.task('install', ['git-check'], function() {
     .on('log', function(data) {
       gutil.log('bower', gutil.colors.cyan(data.id), data.message);
     });
+});
+
+// scripts task
+gulp.task('scripts', function() {
+  gulp.src(paths.scripts)
+    .pipe(ngAnnotate({
+      remove: true,
+      add: true,
+      single_quotes: true
+    }))
+    .pipe(uglify())
+    .pipe(concat('app.bundle.min.js'))
+    .pipe(gulp.dest(paths.dist + '/js'));
 });
 
 gulp.task('git-check', function(done) {
