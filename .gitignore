@@ -7,3 +7,4 @@ plugins/
 www/*
 src/css/ionic.app.css
 src/lib
+src/app/config/config.js

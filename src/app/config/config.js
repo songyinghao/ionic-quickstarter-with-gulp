@@ -6,12 +6,12 @@ angular.module("starter.configs", [])
 })
 
 .constant("APP", {
-	"devMode": false
+	"devMode": true
 })
 
 .constant("ServerConfiguration", {
-	"baseApiUrl": "http://staging.com/api/v1/",
-	"domain": "http://staging.com"
+	"baseApiUrl": "http://localhost:3000/api/v1/",
+	"domain": "http://localhost:3000"
 })
 
 ;

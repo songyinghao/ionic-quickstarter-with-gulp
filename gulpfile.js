@@ -32,9 +32,23 @@ var ngAnnotate = require('gulp-ng-annotate');
 
 var inject = require('gulp-inject');
 
+/**
+* This is intended to be a temporary solution until the release of gulp 4.0 which has support
+* for defining task dependencies in series or in parallel.
+*/
+var runSequence = require('run-sequence');
+
 //
 // === PATHS ===
 //
+
+var files = {
+  jsbundle: 'app.bundle.min.js',
+  appcss: 'app.css',
+  ionicappmincss: 'ionic.app.min.css',
+  ionicbundle: 'ionic.bundle.min.js'    // change to 'ionic.bundle.js' for debugging moduleErr errors
+};
+
 var paths = {
   sass: ['./src/css/scss/*.scss'],
   templates: ['./src/app/**/*.html'],
@@ -49,7 +63,40 @@ var paths = {
   ]
 };
 
-gulp.task('default', ['sass']);
+//
+// === TOP LEVEL TASKS (invoke with "gulp <task-name>") ===
+//
+
+// default task for DEV
+gulp.task('default', ['inject-libs-to-index-html']);
+
+// build task for Development mode、 Staging mode or Production mode
+var developmentTask,
+    stagingTask,
+    productionTask;
+
+// development task
+developmentTask = ['sass', 'set-api-config', 'copy-src-to-dest', 'watch-src-folder'];
+
+// production task
+productionTask = ['sass', 'index', 'templates', 'set-api-config', 'imagemin', 'common-imagemin', 'scripts', 'minify-third-library-js'];
+
+// staging task
+stagingTask = productionTask;
+
+gulp.task('build', function(callback){
+  runSequence('clean',
+    eval((args.env || "development") + "Task"),
+    function(){
+      if(!args.env || (args.env == "development")) {
+        gutil.log(gutil.colors.yellow('Watching and auto synchronizing the change from src to www, Ctrl-C to stop watching and quit'));
+      }
+    });
+})
+
+//
+// === CHILD TASKS ===
+//
 
 // sass task
 // =================================================================
@@ -188,6 +235,22 @@ gulp.task('minify-third-library-js', function() {
     .pipe(uglify())
     .pipe(concat('app.plugin.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
+});
+
+// prepare Index.html for dist - ie. using min files
+// =================================================================
+gulp.task('index', function() {
+  gulp.src(paths.html)
+    .pipe(htmlreplace({
+      'sass': 'css/ionic.app.min.css',
+      'css': 'css/app.min.css',
+      'js': 'js/app.bundle.min.js',
+      'third-library-js': 'js/app.plugin.min.js',
+      'templates': 'js/templates.js',
+      'shared': 'shared/services/app.services.min.js',
+      'ionic': 'lib/ionic/js/' + files.ionicbundle
+    }))
+    .pipe(gulp.dest(paths.dist + '/.'));
 });
 
 gulp.task('install', ['git-check'], function() {
