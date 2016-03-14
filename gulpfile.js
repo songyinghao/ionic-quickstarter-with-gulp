@@ -25,12 +25,16 @@ var args    = require('yargs').argv;
 var templateCache = require('gulp-angular-templatecache');
 var minifyHtml = require('gulp-minify-html');
 
+var imagemin = require('gulp-imagemin');
+
 //
 // === PATHS ===
 //
 var paths = {
   sass: ['./src/css/scss/*.scss'],
   templates: ['./src/app/**/*.html'],
+  images: ['./src/app/**/img/*'],
+  commonimages: ['./src/img/*'],
   dist: ['./www']
 };
 
@@ -135,6 +139,18 @@ gulp.task('templates', function() {
     .pipe(gulp.dest(paths.dist + '/js'));
 });
 
+// imagemin images and output them in dist
+gulp.task('imagemin', function() {
+  gulp.src(paths.images)
+    .pipe(imagemin())
+    .pipe(gulp.dest(paths.dist + '/app'));
+});
+
+gulp.task('common-imagemin', function() {
+  gulp.src(paths.commonimages)
+    .pipe(imagemin())
+    .pipe(gulp.dest(paths.dist + '/img'));
+});
 
 gulp.task('install', ['git-check'], function() {
   return bower.commands.install()
