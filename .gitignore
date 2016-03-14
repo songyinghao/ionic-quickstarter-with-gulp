@@ -6,3 +6,4 @@ platforms/
 plugins/
 www/*
 src/css/ionic.app.css
+src/lib
