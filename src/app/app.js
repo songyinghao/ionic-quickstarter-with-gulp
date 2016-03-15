@@ -7,12 +7,14 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', [
     'ionic',
-    'starter.controllers',
+    'ionic.contrib.ui.tinderCards',
+
     'starter.services',
     'starter.routes',
     'starter.configs',
 
-    'ionic.contrib.ui.tinderCards',
+    'starter.dash',
+    'starter.chats',
 
     'templates'
     ])
