@@ -15,10 +15,13 @@
 
     function DashController($scope) {
       var cardTypes = [
-        { image: 'https://pbs.twimg.com/profile_images/696212819570655232/UJYdhVYj.jpg' },
-        { image: 'https://pbs.twimg.com/profile_images/479090794058379264/84TKj_qa.jpeg' },
-        { image: 'https://pbs.twimg.com/profile_images/598205061232103424/3j5HUXMY.png' },
-        { image: 'https://pbs.twimg.com/profile_images/692904108424982528/0PESpDwT.jpg'}
+        { image: 'http://photos.breadtrip.com/photo_2016_02_18_e76cff35507b001d268ad8885182567c.jpg' },
+        { image: 'http://photos.breadtrip.com/photo_2016_02_18_b9b21af2a303377073fa0b4747e56cd1.jpg' },
+        { image: 'http://photos.breadtrip.com/photo_2016_02_16_736b4371ad405f0259986389e27d9afa.jpg' },
+        { image: 'http://photos.breadtrip.com/photo_2016_02_18_a90a91877a78a36e3fa1aae635c2f218.jpg' },
+        { image: 'http://photos.breadtrip.com/photo_2016_02_18_e2247394433b702fd42b817ba6b79d3f.jpg' },
+        { image: 'http://photos.breadtrip.com/photo_2016_02_18_f431943200ad20990b0afde81aa81ee3.jpg' },
+        { image: 'http://photos.breadtrip.com/photo_2016_02_18_cf723fdb547da5b74308c3dfd2d9e89c.jpg' },
       ];
 
       $scope.cards = Array.prototype.slice.call(cardTypes, 0);
