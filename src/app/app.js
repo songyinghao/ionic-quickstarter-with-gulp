@@ -12,7 +12,9 @@ angular.module('starter', [
     'starter.routes',
     'starter.configs',
 
-    'ionic.contrib.ui.tinderCards'
+    'ionic.contrib.ui.tinderCards',
+
+    'templates'
     ])
 
 .run(function($ionicPlatform) {

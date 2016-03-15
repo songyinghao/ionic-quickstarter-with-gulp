@@ -9,19 +9,28 @@
     <link href="css/style.css" rel="stylesheet"> -->
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above -->
+    <!-- compiled css output -->
+    <!-- NOTE: the build-endbuild tags are used by gulp-htmlreplace - DO NOT REMOVE -->
+    <!-- build:sass -->
     <link href="css/ionic.app.css" rel="stylesheet">
+    <!-- endbuild -->
 
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
-
+    <!-- NOTE: the build-endbuild tags are used by gulp-htmlreplace - DO NOT REMOVE -->
+    <!-- build:third-library-js -->
     <!-- NOTE: the inject-endinject tags are used by gulp-inject - DO NOT REMOVE -->
     <!-- inject:js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/collide/collide.js"></script>
     <script src="lib/ionic-contrib-tinder-cards/ionic.tdcards.js"></script>
     <!-- endinject -->
+    <!-- endbuild -->
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <!-- NOTE: the build-endbuild tags are used by gulp-htmlreplace - DO NOT REMOVE -->
+    <!-- build:js -->
 
     <!-- chats module -->
     <script src="app/chats/chats.controller.js"></script>
@@ -30,10 +39,16 @@
     <!-- dash module -->
     <script src="app/dash/dash.controller.js"></script>
 
-    <!-- your app's js -->
+    <!-- scripts belonging to the root "app" module are placed here -->
     <script src="app/app.js"></script>
     <script src="app/app.routes.js"></script>
     <script src="app/config/config.js"></script>
+    <!-- endbuild -->
+
+    <!-- ANGULAR-TEMPLATECACHE -->
+    <!-- build:templates -->
+    <script src="app/app.templates.js"></script>
+    <!-- endbuild -->
   </head>
   <body ng-app="starter">
     <!--
