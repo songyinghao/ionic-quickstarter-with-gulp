@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.chats')
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called

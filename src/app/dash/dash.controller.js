@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.dash')
 
 .controller('DashCtrl', function($scope) {
   console.log('CARDS CTRL');
