@@ -32,6 +32,8 @@ var ngAnnotate = require('gulp-ng-annotate');
 
 var inject = require('gulp-inject');
 
+var htmlreplace = require('gulp-html-replace');
+
 /**
 * This is intended to be a temporary solution until the release of gulp 4.0 which has support
 * for defining task dependencies in series or in parallel.
@@ -50,6 +52,7 @@ var files = {
 };
 
 var paths = {
+  html: ['./src/*.html'],
   sass: ['./src/css/scss/*.scss'],
   templates: ['./src/app/**/*.html'],
   images: ['./src/app/**/img/*'],
@@ -58,6 +61,8 @@ var paths = {
   dist: ['./www'],
 
   lib: [
+    './src/lib/ionic/js/ionic.bundle.js',
+    './src/lib/angular-resource/angular-resource.js',
     './src/lib/collide/collide.js',
     './src/lib/ionic-contrib-tinder-cards/ionic.tdcards.js',
   ]
@@ -79,7 +84,7 @@ var developmentTask,
 developmentTask = ['sass', 'set-api-config', 'copy-src-to-dest', 'watch-src-folder'];
 
 // production task
-productionTask = ['sass', 'index', 'templates', 'set-api-config', 'imagemin', 'common-imagemin', 'scripts', 'minify-third-library-js'];
+productionTask = ['sass', 'index', 'templates', 'copy-fonts', 'set-api-config', 'imagemin', 'common-imagemin', 'scripts', 'minify-third-library-js'];
 
 // staging task
 stagingTask = productionTask;
@@ -272,6 +277,13 @@ gulp.task('scripts', function() {
     .pipe(uglify())
     .pipe(concat('app.bundle.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
+});
+
+
+// copy fonts task
+gulp.task('copy-fonts', function() {
+  return gulp.src(['./src/font/*', './src/lib/ionic/fonts/*'])
+             .pipe(gulpCopy(paths.dist,{prefix: 1}));
 });
 
 //
