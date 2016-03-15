@@ -24,7 +24,7 @@ angular.module('starter.routes', [])
     views: {
       'tab-dash': {
         templateUrl: 'app/dash/tab-dash.html',
-        controller: 'DashCtrl'
+        controller: 'DashController'
       }
     }
   })
@@ -34,7 +34,7 @@ angular.module('starter.routes', [])
       views: {
         'tab-chats': {
           templateUrl: 'app/chats/templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+          controller: 'ChatsController'
         }
       }
     })
@@ -43,7 +43,7 @@ angular.module('starter.routes', [])
       views: {
         'tab-chats': {
           templateUrl: 'app/chats/templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+          controller: 'ChatDetailController'
         }
       }
     })
@@ -52,8 +52,7 @@ angular.module('starter.routes', [])
     url: '/account',
     views: {
       'tab-account': {
-        templateUrl: 'app/account/tab-account.html',
-        controller: 'AccountCtrl'
+        templateUrl: 'app/account/tab-account.html'
       }
     }
   });
