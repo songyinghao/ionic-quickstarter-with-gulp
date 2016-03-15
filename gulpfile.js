@@ -84,7 +84,7 @@ var developmentTask,
 developmentTask = ['sass', 'set-api-config', 'copy-src-to-dest', 'watch-src-folder'];
 
 // production task
-productionTask = ['sass', 'index', 'templates', 'set-api-config', 'imagemin', 'common-imagemin', 'scripts', 'minify-third-library-js'];
+productionTask = ['sass', 'index', 'templates', 'copy-fonts', 'set-api-config', 'imagemin', 'common-imagemin', 'scripts', 'minify-third-library-js'];
 
 // staging task
 stagingTask = productionTask;
@@ -277,6 +277,13 @@ gulp.task('scripts', function() {
     .pipe(uglify())
     .pipe(concat('app.bundle.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
+});
+
+
+// copy fonts task
+gulp.task('copy-fonts', function() {
+  return gulp.src(['./src/font/*', './src/lib/ionic/fonts/*'])
+             .pipe(gulpCopy(paths.dist,{prefix: 1}));
 });
 
 //
