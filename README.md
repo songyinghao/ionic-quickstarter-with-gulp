@@ -22,28 +22,24 @@ Instead, we've chosen to organize the files on a Module basis: each Module is in
 /
 |
 |- src/
-|
 |    |
-|    |- app/
-|    |    |- home/
+|    |- js/
+|    |    |- Controllers/
 |    |    |    |
-|    |    |    |- home.module.js
-|    |    |    |- home.controller.js
-|    |    |    |- home.directive.js
-|    |    |    |- ($feature.$type.js)
-|    |    |    |- home.html
-|    |    |    |- home.scss
+|    |    |    |- Account/
+|    |    |    |    |- PwdChange-controller.js
+|    |    |    |    |- AddrChange-controller.js
 |    |    |
-|    |    |- config/
-|    |    |    |- config.default.json
-|    |    |    |- config.development.json
-|    |    |    |- config.production.json
-|    |    |    |- config.js
+|    |    |- Services/
+|    |    |    |
+|    |    |    |- Account/
+|    |    |    |    |- PwdChange-service.js
+|    |    |    |    |- AddrChange-service.js
 |    |    |
 |    |    |- app.js
-|    |    |- app.routes.js
-|    |    |- app.services.js
-|    |    |- app.templates.js
+|    |    |- controllers.js
+|    |    |- directives.js
+|    |    |- services.js
 |    |    |
 |    |- css/
 |    |    |- scss/
@@ -51,11 +47,15 @@ Instead, we've chosen to organize the files on a Module basis: each Module is in
 |    |    |- ionic.app.css (all css will be compiled into this file)
 |    |    |
 |    |- img/
-|    |    |
+|    |    |- icon/
+|    |    |    |- chat.png
+|    |    |- Other/
+|    |    |    |- ionic.app.scss (index file)
 |    |- lib/
 |    |    |- angular/
 |    |    |- angular-resource
 |    |    |- ionic
+|    |    |- jquery
 |    |- shared/ (common components cross projects)
 |    |    |- canvasClock/
 |    |    |- calendar/
